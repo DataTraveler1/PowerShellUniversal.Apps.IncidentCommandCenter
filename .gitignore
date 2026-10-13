@@ -1,0 +1,9 @@
+output/
+artifacts/
+*.zip
+*.log
+*.clixml
+.env*
+*token*
+*credential*
+node_modules/
