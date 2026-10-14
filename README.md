@@ -5,23 +5,75 @@ feature, built around an incident-response rehearsal at fictional **Acme Inc.**
 Connect an external MCP-capable assistant to PSU, then inspect a warning,
 acknowledge it, verify saved state and prepare a handoff.
 
-## Why does this exist?
+## FAQ
 
-ICC exists to demonstrate **PowerShell Universal's MCP feature** with a working
-example you can inspect and try. It shows how a PowerShell workflow can become a
-tool that an external assistant discovers and calls through PSU's MCP endpoint.
-PSU executes the PowerShell and stores the result; the assistant provides the
-conversation.
+### Why does this exist?
 
-The **ICC_Demo_Incident** tool exposes three actions: **Inspect**, **Acknowledge**
-and **Handoff**. An assistant can read the current rehearsal, save receipt of its
-warning, verify the stored response and prepare a handoff from those facts. The
-dashboard makes the same saved state visible and lets you compare tool calls
-with direct app actions.
+ICC demonstrates **PowerShell Universal's MCP feature** with a working example
+you can inspect and try. An external assistant discovers and calls
+**ICC_Demo_Incident**; PSU runs the PowerShell and stores the result. The incident
+rehearsal gives that demonstration a concrete scenario, and the dashboard makes
+the same saved state visible.
 
-The fictional incident supplies a simple scenario for learning that pattern.
-Its signals are synthetic, while the acknowledgment is real saved state. The
-native app also works independently of an MCP client.
+### How do I jump in and use it NOW?
+
+On a compatible Windows PSU server:
+
+1. [Download the ICC 0.1.1 ZIP](https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/releases/download/v0.1.1/IncidentCommandCenter-0.1.1.zip) and extract it.
+2. Follow [Install](#install) below, then open `/incident-command-center`
+   on your PSU server and sign in as an Administrator.
+3. Follow [MCP setup and usage](docs/MCP.md) to register **ICC_Demo_Incident**
+   and connect your assistant.
+4. Try the prompt below, then refresh the dashboard to see the saved result.
+
+If ICC is already installed, open the existing app and follow
+[Updating and recovery](docs/UPGRADE.md) before rerunning an installer.
+
+### What do I need?
+
+Windows, **PSU 2026.3.3**, matching **Devolutions.PowerShellUniversal 2026.3.3**,
+**PowerShell 7.5.4 or later**, and an existing Administrator app token.
+PSU also needs an app-capable license and its **PowerShell 7** environment enabled.
+The [installation section](#install) supplies the command and local module path.
+
+### Do I need an AI account or API key?
+
+The native dashboard works without an AI account or external API. The MCP demo
+uses your assistant's existing model access and a PSU Administrator app token.
+In PSU, **Disable AI Features** must be off for the MCP endpoint to be available.
+Keep tokens in the client's supported local secret mechanism.
+
+### What should I ask the assistant?
+
+> Use ICC_Demo_Incident. Inspect the active rehearsal first and keep its full
+> exerciseId for later calls. Acknowledge the warning, inspect the saved state,
+> acknowledge it again, inspect once more, and prepare a handoff. Stop if a tool
+> call fails. Acknowledgment records receipt; it does not repair a service.
+
+See the [guided conversation](docs/MCP.md#demonstrate-the-conversation) for the
+expected results. Refresh the dashboard after tool calls.
+
+### Is this monitoring a real service or fixing an incident?
+
+The service signals and timeline are synthetic. The acknowledgment is real state
+saved on the PSU server. Repeating it preserves the original response and one
+state transition. Acknowledgment records receipt of a warning and performs no
+service repair.
+
+### Is this ready for production or tested on other platforms?
+
+This is a **single-server community preview** tested on Windows with the
+PSU/module **2026.3.3** pair, PowerShell **7.6.6** and Codex CLI. Linux, other PSU
+releases or clients, custom service identities and multiple nodes remain untested.
+Use it as a learning example; assess and test any adaptation for your environment.
+
+### What if setup stops, or I want to start another rehearsal?
+
+Fresh installers stop on existing names, routes or installation folders; use
+[Updating and recovery](docs/UPGRADE.md) to inspect and reuse an existing setup.
+For another exercise, choose **New rehearsal** in the app. All viewers share
+the active rehearsal, so coordinate first. Earlier exercise data is retained;
+there is no automatic cleanup.
 
 **ICC 0.1.1 targets Windows with PowerShell Universal 2026.3.3 and
 Devolutions.PowerShellUniversal 2026.3.3.** The service signals are synthetic;
