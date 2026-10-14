@@ -7,7 +7,9 @@ acknowledge it, verify saved state and prepare a handoff.
 
 ## FAQ
 
-### Why does this exist?
+<a name="why-does-this-exist"></a>
+
+### Why does this exist? 💡
 
 ICC demonstrates **PowerShell Universal's MCP feature** with a working example
 you can inspect and try. An external assistant discovers and calls
@@ -15,7 +17,9 @@ you can inspect and try. An external assistant discovers and calls
 rehearsal gives that demonstration a concrete scenario, and the dashboard makes
 the same saved state visible.
 
-### How do I jump in and use it NOW?
+<a name="how-do-i-jump-in-and-use-it-now"></a>
+
+### How do I jump in and use it NOW? 🤔
 
 On a compatible Windows PSU server:
 
@@ -29,21 +33,27 @@ On a compatible Windows PSU server:
 If ICC is already installed, open the existing app and follow
 [Updating and recovery](docs/UPGRADE.md) before rerunning an installer.
 
-### What do I need?
+<a name="what-do-i-need"></a>
+
+### What do I need? 🧰
 
 Windows, **PSU 2026.3.3**, matching **Devolutions.PowerShellUniversal 2026.3.3**,
 **PowerShell 7.5.4 or later**, and an existing Administrator app token.
 PSU also needs an app-capable license and its **PowerShell 7** environment enabled.
 The [installation section](#install) supplies the command and local module path.
 
-### Do I need an AI account or API key?
+<a name="do-i-need-an-ai-account-or-api-key"></a>
+
+### Do I need an AI account or API key? 🤖
 
 The native dashboard works without an AI account or external API. The MCP demo
 uses your assistant's existing model access and a PSU Administrator app token.
 In PSU, **Disable AI Features** must be off for the MCP endpoint to be available.
 Keep tokens in the client's supported local secret mechanism.
 
-### What should I ask the assistant?
+<a name="what-should-i-ask-the-assistant"></a>
+
+### What should I ask the assistant? 💬
 
 > Use ICC_Demo_Incident. Inspect the active rehearsal first and keep its full
 > exerciseId for later calls. Acknowledge the warning, inspect the saved state,
@@ -53,21 +63,27 @@ Keep tokens in the client's supported local secret mechanism.
 See the [guided conversation](docs/MCP.md#demonstrate-the-conversation) for the
 expected results. Refresh the dashboard after tool calls.
 
-### Is this monitoring a real service or fixing an incident?
+<a name="is-this-monitoring-a-real-service-or-fixing-an-incident"></a>
+
+### Is this monitoring a real service or fixing an incident? 🔎
 
 The service signals and timeline are synthetic. The acknowledgment is real state
 saved on the PSU server. Repeating it preserves the original response and one
 state transition. Acknowledgment records receipt of a warning and performs no
 service repair.
 
-### Is this ready for production or tested on other platforms?
+<a name="is-this-ready-for-production-or-tested-on-other-platforms"></a>
+
+### Is this ready for production or tested on other platforms? 🚧
 
 This is a **single-server community preview** tested on Windows with the
 PSU/module **2026.3.3** pair, PowerShell **7.6.6** and Codex CLI. Linux, other PSU
 releases or clients, custom service identities and multiple nodes remain untested.
 Use it as a learning example; assess and test any adaptation for your environment.
 
-### What if setup stops, or I want to start another rehearsal?
+<a name="what-if-setup-stops-or-i-want-to-start-another-rehearsal"></a>
+
+### What if setup stops, or I want to start another rehearsal? 🔄
 
 Fresh installers stop on existing names, routes or installation folders; use
 [Updating and recovery](docs/UPGRADE.md) to inspect and reuse an existing setup.
