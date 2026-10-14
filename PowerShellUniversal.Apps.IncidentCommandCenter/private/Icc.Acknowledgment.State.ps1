@@ -1,8 +1,8 @@
-# Self-contained state engine, embedded verbatim in the deployed W4 script.
-# No I/O occurs when this file is dot-sourced. Root is an internal test seam;
-# the deployed script fixes it beneath CommonApplicationData, never a tool input.
+# Derived from the retained W4 state engine; ICC 0.1.2 adds RequireExisting.
+# Historical W4 deployment bytes are unchanged. Dot-sourcing performs no I/O.
+# ICC supplies Root through its store helper; Root is never an MCP argument.
 function Invoke-IccW4State {
-    param([string]$Root,[string]$Action,[string]$Nonce,[string]$AcknowledgmentId='')
+    param([string]$Root,[string]$Action,[string]$Nonce,[string]$AcknowledgmentId='',[switch]$RequireExisting)
     $ErrorActionPreference='Stop'
     if ($Action -cnotin @('Read','Acknowledge') -or $Nonce -cnotmatch '\A[a-f0-9]{32}\z' -or
         ($Action -ceq 'Acknowledge' -and $AcknowledgmentId -cnotmatch '\A[a-f0-9]{32}\z') -or
@@ -23,7 +23,11 @@ function Invoke-IccW4State {
     try {
         $state=$null
         $bytes=$null
-        if ([IO.File]::Exists($path)) {
+        $exists=[IO.File]::Exists($path)
+        if ($RequireExisting -and -not $exists) {
+            throw 'The saved acknowledgment is missing. Restore a complete verified data backup before continuing; do not acknowledge this rehearsal again.'
+        }
+        if ($exists) {
             if ([IO.FileInfo]::new($path).Length -gt 4096) {throw 'InvalidW4State'}
             $bytes=[IO.File]::ReadAllBytes($path)
             $json=[Text.UTF8Encoding]::new($false,$true).GetString($bytes)

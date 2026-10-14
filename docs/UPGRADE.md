@@ -3,6 +3,8 @@
 Use this procedure to update an existing ICC installation or recover resources
 after an interrupted installation. The Windows server must already run PSU and
 Devolutions.PowerShellUniversal 2026.3.3. This updates ICC code, not PSU itself.
+Version 0.1.2 is a community preview with offline validation of its corrections.
+It keeps the existing exercise-data format; no data migration or reset is required.
 
 The fresh installers deliberately stop at occupied app names, routes, scripts,
 tools and installation folders. Rerunning them is not an upgrade or repair.
@@ -28,7 +30,7 @@ Verify the intended release ZIP against its matching distribution checksums.
 Copy its complete module folder to:
 
 ```text
-%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.1\PowerShellUniversal.Apps.IncidentCommandCenter
+%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.2\PowerShellUniversal.Apps.IncidentCommandCenter
 ```
 
 If that folder already exists, preserve its complete before-copy and compare it
@@ -39,7 +41,7 @@ CommonApplicationData root if your machine differs from standard ProgramData.
 Edit the existing app to use this content:
 
 ```powershell
-$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.1/PowerShellUniversal.Apps.IncidentCommandCenter/PowerShellUniversal.Apps.IncidentCommandCenter.psd1'
+$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.2/PowerShellUniversal.Apps.IncidentCommandCenter/PowerShellUniversal.Apps.IncidentCommandCenter.psd1'
 Import-Module $manifest -Force
 New-UDIncidentCommandCenterApp
 ```
@@ -82,6 +84,31 @@ Refresh an older dashboard before continuing.
 PSU AI features must be enabled for MCP. Use an existing Administrator token
 through the client's supported secret mechanism; no new identity, role or token
 is required.
+
+## Missing acknowledgment data
+
+If retained actions reference a saved acknowledgment whose JSON file is missing,
+ICC refuses reads, actions and Handoff. It does not silently reopen the incident
+or generate another first acknowledgment for that exercise.
+
+Preserve the affected store and stop ICC activity. Restore a complete verified
+backup of that store, including its pointer, exercise records, acknowledgments
+and action files. Verify the original acknowledgment ID, timestamp and hash
+before resuming. Do not reconstruct an acknowledgment from the demo timeline or
+manually edit its JSON. Restoring ICC code alone cannot repair missing data.
+
+If you deliberately choose a fresh rehearsal instead, preserve the damaged
+exercise first, then explicitly use `New-IccDemoExercise` from the installed
+module. This changes the shared current pointer and retains the earlier data;
+it is not an automatic recovery action. The dashboard may be unable to render
+its New rehearsal button while the current exercise is incomplete.
+
+The guard detects retained references to a missing acknowledgment. It cannot
+detect loss of both the acknowledgment and all evidence that it existed.
+
+If an event-write failure instead says acknowledgment is saved, preserve that
+record and inspect it before retrying. The saved acknowledgment remains
+authoritative even when its demo timeline event was not written.
 
 ## Roll back ICC code
 

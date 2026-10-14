@@ -1,6 +1,6 @@
 @{
     RootModule = 'PowerShellUniversal.Apps.IncidentCommandCenter.psm1'
-    ModuleVersion = '0.1.1'
+    ModuleVersion = '0.1.2'
     GUID = 'a36ca703-647d-4d6e-8cd4-92f8cb946102'
     Author = 'Mike Simpson'
     Copyright = '(c) 2026 Mike Simpson. MIT License.'
@@ -15,7 +15,7 @@
             Tags = @('PowerShellUniversal','app','incident','operations','demo')
             ProjectUri = 'https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter'
             LicenseUri = 'https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/blob/main/LICENSE'
-            ReleaseNotes = 'ICC 0.1.1 for Windows PowerShell Universal 2026.3.3. Durable acknowledgment, saved-state verification, safe repetition, native handoff and an optional shared-rehearsal MCP tool. See README.md for installation and usage.'
+            ReleaseNotes = 'ICC 0.1.2 community preview for Windows PSU 2026.3.3. Coordinates timeline readers/writers, refuses missing acknowledgment data and corrects initial verification wording. Offline validation only; see RELEASE-NOTES.md and README.md.'
         }
     }
 }

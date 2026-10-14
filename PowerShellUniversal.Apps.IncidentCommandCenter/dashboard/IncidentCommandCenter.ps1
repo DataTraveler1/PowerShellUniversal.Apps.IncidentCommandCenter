@@ -25,8 +25,10 @@ New-UDApp -Title 'Acme Inc. | Incident Command Center' -Content {
                         New-UDButton -Id 'icc-verify' -Text 'Verify saved state' -Variant 'outlined' -OnClick {
                             Import-Module (Join-Path $Cache:IccShowcaseModuleRoot 'PowerShellUniversal.Apps.IncidentCommandCenter.psd1')
                             try {
-                                $null = Invoke-IccDemoAction -Action Read -ExerciseId $Session:IccExerciseId -RequireCurrent
-                                Show-UDToast -Message 'A separate read loaded the saved state from disk.' -Duration 5000
+                                $result = Invoke-IccDemoAction -Action Read -ExerciseId $Session:IccExerciseId -RequireCurrent
+                                $message = if ($result.State.stateSha256) { 'A separate read loaded the saved acknowledgment from disk.' }
+                                    else { 'No acknowledgment has been saved yet. Acknowledge the incident before verifying its saved response.' }
+                                Show-UDToast -Message $message -Duration 5000
                                 Sync-UDElement -Id 'icc-desk'
                             } catch { Show-UDToast -Message ('Read could not complete: ' + $_.Exception.Message) -Duration 8000 }
                         }

@@ -16,6 +16,6 @@ param(
     [string]$ExerciseId = ''
 )
 $ErrorActionPreference = 'Stop'
-$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.1/PowerShellUniversal.Apps.IncidentCommandCenter/PowerShellUniversal.Apps.IncidentCommandCenter.psd1'
+$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.2/PowerShellUniversal.Apps.IncidentCommandCenter/PowerShellUniversal.Apps.IncidentCommandCenter.psd1'
 Import-Module $manifest -Force
 Invoke-IccDemoToolOperation -Action $Action -ExerciseId $ExerciseId | ConvertTo-Json -Depth 6 -Compress

@@ -6,7 +6,7 @@ if (-not $IsWindows) { throw 'These installer checks require Windows; all instal
 $package = Split-Path -Parent $PSScriptRoot
 $moduleName = 'PowerShellUniversal.Apps.IncidentCommandCenter'
 $sourceModule = Join-Path $package $moduleName
-$targetRoot = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.1'
+$targetRoot = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.2'
 $installedManifest = Join-Path $targetRoot ($moduleName + '/' + $moduleName + '.psd1')
 $wrapperPath = Join-Path $package 'mcp/Invoke-IccDemoTool.ps1'
 $wrapperSource = Get-Content -LiteralPath $wrapperPath -Raw
@@ -111,7 +111,7 @@ $writeCommands = @('New-Item','Copy-Item','New-PSUApp','New-PSUScript','New-PSUA
 function Invoke-IccInstallerCase([string]$Name, [ValidateSet('App','Mcp')][string]$Kind, [hashtable]$Overrides = @{}, [switch]$WhatIf, [uri]$ServerUrl = 'http://localhost:5000', [string]$ManagementModulePath) {
     $config = @{
         ServerVersion='2026.3.3'; ModuleName='Devolutions.PowerShellUniversal'; ModuleVersion='2026.3.3'
-        IccManifestVersion='0.1.1'; LoadedIccVersion='0.1.1'; Apps=@(); Scripts=@(); Tools=@()
+        IccManifestVersion='0.1.2'; LoadedIccVersion='0.1.2'; Apps=@(); Scripts=@(); Tools=@()
     }
     foreach ($key in $Overrides.Keys) { $config[$key] = $Overrides[$key] }
     $context = [pscustomobject]@{
@@ -169,7 +169,7 @@ function Get-IccCall($Case, [string]$Name) {
 }
 
 $manifestData = Import-PowerShellDataFile -LiteralPath (Join-Path $sourceModule ($moduleName + '.psd1'))
-Confirm-IccInstaller ($manifestData.ModuleVersion -ceq '0.1.1') 'Package manifest must be 0.1.1.'
+Confirm-IccInstaller ($manifestData.ModuleVersion -ceq '0.1.2') 'Package manifest must be 0.1.2.'
 foreach ($kind in @('App','Mcp')) {
     foreach ($version in @('2026.3.3','2026.3.3.0')) {
         $case = Invoke-IccInstallerCase "$kind accepts $version" $kind @{ServerVersion=$version}
@@ -180,12 +180,12 @@ foreach ($kind in @('App','Mcp')) {
             $app = (Get-IccCall $case 'New-PSUApp')[0].Parameters
             Confirm-IccInstaller ($app.Authenticated -and $app.Role.Count -eq 1 -and $app.Role[0] -ceq 'Administrator' -and $app.Environment -ceq 'PowerShell 7') 'App access and environment must remain bounded.'
             Confirm-IccInstaller ($app.Name -ceq 'Incident Command Center' -and $app.BaseUrl -ceq '/incident-command-center') 'App identity and route must remain stable.'
-            Confirm-IccInstaller ($app.Content.ToString().Contains($installedManifest) -and $case.Output[0].ModulePath -eq (Join-Path $targetRoot $moduleName)) 'App must import 0.1.1 from its copied module.'
+            Confirm-IccInstaller ($app.Content.ToString().Contains($installedManifest) -and $case.Output[0].ModulePath -eq (Join-Path $targetRoot $moduleName)) 'App must import 0.1.2 from its copied module.'
             Confirm-IccInstaller ($case.Context.Copied -and $case.Output[0].StatePath -eq (Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/IncidentCommandCenter')) 'Code update must retain the separate state root.'
         } else {
             $scriptCall = (Get-IccCall $case 'New-PSUScript')[0].Parameters
             $tool = (Get-IccCall $case 'New-PSUAiTool')[0].Parameters
-            Confirm-IccInstaller ($scriptCall.Name -ceq 'icc-demo-mcp.ps1' -and $scriptCall.ScriptBlock.ToString().Contains('IncidentCommandCenter/0.1.1/')) 'Registered wrapper must use the 0.1.1 code path.'
+            Confirm-IccInstaller ($scriptCall.Name -ceq 'icc-demo-mcp.ps1' -and $scriptCall.ScriptBlock.ToString().Contains('IncidentCommandCenter/0.1.2/')) 'Registered wrapper must use the 0.1.2 code path.'
             Confirm-IccInstaller ($scriptCall.Role.Count -eq 1 -and $scriptCall.Role[0] -ceq 'Administrator' -and $scriptCall.Environment -ceq 'PowerShell 7') 'Script access and environment must remain bounded.'
             Confirm-IccInstaller ($tool.Name -ceq 'ICC_Demo_Incident' -and $tool.ScriptFullPath -ceq 'icc-demo-mcp.ps1' -and $tool.Authenticated -and $tool.Mcp -and $tool.Role.Count -eq 1 -and $tool.Role[0] -ceq 'Administrator') 'Tool must retain its authenticated Administrator MCP contract.'
             Confirm-IccInstaller ($tool.Environment -ceq 'PowerShell 7' -and $tool.DefaultMaxWaitTimeoutSeconds -eq 30 -and $case.Output[0].McpUrl -ceq 'http://localhost:5000/api/v1/mcp') 'Tool runtime and output route must remain unchanged.'
@@ -256,9 +256,9 @@ Confirm-IccRefused (Invoke-IccInstallerCase 'App refuses incomplete source' App 
 foreach ($fixture in @(@{Scripts=@([pscustomobject]@{Name='ICC-DEMO-MCP.PS1'})}, @{Tools=@([pscustomobject]@{Name='icc_demo_incident'})})) {
     Confirm-IccRefused (Invoke-IccInstallerCase 'Mcp refuses existing resource' Mcp $fixture) 'script or tool already exists'
 }
-foreach ($fixture in @(@{InstalledMissing=$true}, @{IccManifestVersion='0.1.0'}, @{LoadedIccVersion='0.1.0'}, @{BridgeMissing=$true})) {
+foreach ($fixture in @(@{InstalledMissing=$true}, @{IccManifestVersion='0.1.0'}, @{LoadedIccVersion='0.1.0'}, @{IccManifestVersion='0.1.1'}, @{LoadedIccVersion='0.1.1'}, @{BridgeMissing=$true})) {
     $case = Invoke-IccInstallerCase "Mcp refuses installed package $($fixture.Keys)" Mcp $fixture
-    Confirm-IccRefused $case 'Install the ICC app|manifest must be version 0.1.1|loaded ICC module must be version 0.1.1|predates the chat bridge'
+    Confirm-IccRefused $case 'Install the ICC app|manifest must be version 0.1.2|loaded ICC module must be version 0.1.2|predates the chat bridge'
     Confirm-IccInstaller ((Get-IccCall $case 'Invoke-RestMethod').Count -eq 0) 'Installed-package refusal must precede server reads.'
 }
 foreach ($fixture in @(@{CopyFails=$true}, @{AppCreationFails=$true})) {

@@ -37,7 +37,7 @@ if ($managementModule.Name -cne 'Devolutions.PowerShellUniversal' -or $managemen
 }
 $moduleName = 'PowerShellUniversal.Apps.IncidentCommandCenter'
 $source = Join-Path $PSScriptRoot $moduleName
-$targetRoot = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.1'
+$targetRoot = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.2'
 $targetModule = Join-Path $targetRoot $moduleName
 $manifest = Join-Path $targetModule ($moduleName + '.psd1')
 $origin = $ServerUrl.AbsoluteUri.TrimEnd('/')
@@ -51,7 +51,7 @@ try {
     }
     if (Test-Path -LiteralPath $targetRoot) { throw 'The versioned installation folder already exists. Inspect it before attempting another install.' }
     if (-not (Test-Path -LiteralPath (Join-Path $source ($moduleName + '.psd1')))) { throw 'Keep this installer beside the complete module folder.' }
-    if ($PSCmdlet.ShouldProcess($origin, 'Copy Incident Command Center 0.1.1 and create its Administrator-only app')) {
+    if ($PSCmdlet.ShouldProcess($origin, 'Copy Incident Command Center 0.1.2 and create its Administrator-only app')) {
         $null = New-Item -Path $targetRoot -ItemType Directory
         Copy-Item -LiteralPath $source -Destination $targetRoot -Recurse
         $escapedManifest = $manifest.Replace("'", "''")

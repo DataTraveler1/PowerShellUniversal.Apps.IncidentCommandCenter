@@ -1,5 +1,8 @@
 # MCP setup and usage
 
+This guide describes the 0.1.2 community preview. It retains the
+0.1.1 tool contract and shared data format; its current validation is offline.
+
 Put an external MCP-capable assistant beside the ICC dashboard. The assistant
 uses **ICC_Demo_Incident** to inspect, acknowledge and hand off the same Acme
 rehearsal shown in the app. PSU runs the PowerShell and stores the acknowledgment.
@@ -7,7 +10,7 @@ Refresh the dashboard after chat actions. The app also works with its native but
 
 ## Register the tool
 
-Install the ICC 0.1.1 app first. On the same PSU 2026.3.3 Windows server, use
+Install the ICC 0.1.2 app first. On the same PSU 2026.3.3 Windows server, use
 PowerShell 7.5.4 or later and Devolutions.PowerShellUniversal 2026.3.3:
 
 ```powershell
@@ -25,7 +28,7 @@ creation but still reads the server.
 If those resources already exist, follow [Upgrade and recovery](UPGRADE.md).
 Reuse their existing definitions instead of running the fresh installer again.
 
-The wrapper imports the installed 0.1.1 module. App and automation processes
+The wrapper imports the installed 0.1.2 module. App and automation processes
 must use the same shared data root and have access to its files. The default
 ProgramData location supplies that store; different `ICC_DEMO_DATA_ROOT` values
 would select different stores.
@@ -60,10 +63,11 @@ account; the external assistant uses its existing model access.
 
 [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp) and
 [PSU AI Tools](https://docs.devolutions.net/powershell-universal/intelligence/ai-tools)
-describe the connection mechanism. Codex CLI native HTTP and one saved project
-configuration are the tested client route on the Windows/PSU 2026.3.3 pair, using
+describe the connection mechanism. The dated ICC 0.1.1 baseline demonstrated
+Codex CLI native HTTP and one saved project configuration on the Windows/PSU 2026.3.3 pair, using
 Codex CLI **0.162.0-alpha.17.2** and PowerShell **7.6.6**.
-Other clients have not been tested with this preview.
+The corrected 0.1.2 release has not been rerun through a live client. Other
+clients have not been tested with this preview.
 
 ## Demonstrate the conversation
 
@@ -105,5 +109,10 @@ compare the returned callId and facts with the completed job output when checkin
 the result. A stale exercise ID is rejected after a new rehearsal. Inspect the
 current exercise and confirm the operator's intent before acting on a different one.
 The tool has no arbitrary-command, service-remediation, messaging or new-rehearsal operation.
+
+If a call reports that an acknowledgment file is missing, stop and follow
+[complete-backup recovery](UPGRADE.md#missing-acknowledgment-data). Do not repeat
+acknowledgment to recreate the record. If an event-write failure says
+acknowledgment is saved, inspect that saved response before deciding to retry.
 
 See the [README](../README.md), [architecture](ARCHITECTURE.md) and [updating/recovery](UPGRADE.md).

@@ -77,14 +77,31 @@ function Get-IccDemoExercise {
     param([string]$ExerciseId)
     $id = Resolve-IccExerciseId $ExerciseId
     $path = Join-Path (Get-IccDemoRoot) $id
-    $record = [IO.File]::ReadAllText((Join-Path $path 'exercise.json')) | ConvertFrom-Json -DateKind String
-    if ($record.schemaVersion -ne 1 -or $record.exerciseId -cne $id -or $record.synthetic -ne $true) { throw 'Invalid exercise record.' }
-    $state = Invoke-IccW4State -Root (Join-Path $path 'state') -Action Read -Nonce ([guid]::NewGuid().ToString('N'))
-    $eventsPath = Join-Path $path 'actions.json'
+    if (-not [IO.Directory]::Exists($path)) { throw 'The exercise record does not exist.' }
+    Invoke-IccStoreLock -LockFile (Join-Path $path 'actions.lock') -Body {
+        Read-IccExerciseSnapshot -ExerciseId $id -Path $path
+    }
+}
+
+function Read-IccExerciseSnapshot {
+    # Caller holds actions.lock. Keep state/timeline reads in the same snapshot;
+    # the order is current.lock (when required), actions.lock, then state lock.
+    param([string]$ExerciseId, [string]$Path)
+    $record = [IO.File]::ReadAllText((Join-Path $Path 'exercise.json')) | ConvertFrom-Json -DateKind String
+    if ($record.schemaVersion -ne 1 -or $record.exerciseId -cne $ExerciseId -or $record.synthetic -ne $true) { throw 'Invalid exercise record.' }
+    $eventsPath = Join-Path $Path 'actions.json'
     $events = @()
     if ([IO.File]::Exists($eventsPath)) { $events = @([IO.File]::ReadAllText($eventsPath) | ConvertFrom-Json -DateKind String) }
+    $hasAcknowledgment = @($events | Where-Object {
+        $_.incidentStatus -ceq 'Acknowledged' -or $_.disposition -cin @('Acknowledged','AlreadyAcknowledged') -or
+        $_.transitionCount -eq 1 -or -not [string]::IsNullOrEmpty([string]$_.stateSha256)
+    }).Count -gt 0
+    if ($hasAcknowledgment -and -not [IO.File]::Exists((Join-Path $Path 'state/DEMO-INC-001.json'))) {
+        throw 'The saved acknowledgment is missing. Restore a complete verified data backup before continuing; do not acknowledge this rehearsal again.'
+    }
+    $state = Invoke-IccW4State -Root (Join-Path $Path 'state') -Action Read -Nonce ([guid]::NewGuid().ToString('N')) -RequireExisting:$hasAcknowledgment
     [pscustomobject]@{
-        ExerciseId = $id
+        ExerciseId = $ExerciseId
         CreatedAtUtc = $record.createdAtUtc
         State = $state
         Events = @($events)
@@ -125,14 +142,15 @@ function Invoke-IccDemoAction {
         Invoke-IccCurrentExercise -ExerciseId $ExerciseId -Operation { Invoke-IccDemoAction -Action $Action -ExerciseId $ExerciseId }
         return
     }
-    $null = Get-IccDemoExercise -ExerciseId $ExerciseId
-    $path = Join-Path (Get-IccDemoRoot) $ExerciseId
+    $id = Resolve-IccExerciseId $ExerciseId
+    $path = Join-Path (Get-IccDemoRoot) $id
+    if (-not [IO.Directory]::Exists($path)) { throw 'The exercise record does not exist.' }
     Invoke-IccStoreLock -LockFile (Join-Path $path 'actions.lock') -Body {
+        $exercise = Read-IccExerciseSnapshot -ExerciseId $id -Path $path
         $eventsPath = Join-Path $path 'actions.json'
-        $events = @()
-        if ([IO.File]::Exists($eventsPath)) { $events = @([IO.File]::ReadAllText($eventsPath) | ConvertFrom-Json -DateKind String) }
+        $events = @($exercise.Events)
         if ($events.Count -ge 500) { throw 'This exercise has reached its action limit. Start a new rehearsal.' }
-        $parameters = @{ Root = (Join-Path $path 'state'); Action = $Action; Nonce = [guid]::NewGuid().ToString('N') }
+        $parameters = @{ Root = (Join-Path $path 'state'); Action = $Action; Nonce = [guid]::NewGuid().ToString('N'); RequireExisting = ($exercise.State.incidentStatus -ceq 'Acknowledged') }
         if ($Action -ceq 'Acknowledge') { $parameters.AcknowledgmentId = [guid]::NewGuid().ToString('N') }
         $state = Invoke-IccW4State @parameters
         $events += [pscustomobject]@{
@@ -141,9 +159,16 @@ function Invoke-IccDemoAction {
             incidentStatus = $state.incidentStatus; stateSha256 = $state.stateSha256
             transitionCount = $state.transitionCount
         }
-        Write-IccDemoJson -Path $eventsPath -Value @($events)
+        try { Write-IccDemoJson -Path $eventsPath -Value @($events) }
+        catch {
+            $detail = if ($Action -ceq 'Acknowledge') { 'Acknowledgment is saved, but its timeline event could not be written.' }
+                else { 'The read completed, but its timeline event could not be written.' }
+            throw [InvalidOperationException]::new(($detail + ' Refresh the dashboard and inspect the saved response before retrying.'), $_.Exception)
+        }
+        # Return this action's snapshot before releasing the lock, so a following
+        # caller cannot replace its last event or disposition in the response.
+        Read-IccExerciseSnapshot -ExerciseId $id -Path $path
     }
-    Get-IccDemoExercise -ExerciseId $ExerciseId
 }
 
 function Get-IccDemoHandoff {
