@@ -1,9 +1,27 @@
 # Incident Command Center
 
-A PowerShell Universal app for practicing incident response at the fictional
-**Acme Inc.** See a checkout warning, acknowledge it, verify the saved response,
-repeat safely and create a handoff. The optional **ICC_Demo_Incident** MCP tool
-lets an external assistant use the same rehearsal.
+A working demonstration of PowerShell Universal's **Model Context Protocol (MCP)**
+feature, built around an incident-response rehearsal at fictional **Acme Inc.**
+Connect an external MCP-capable assistant to PSU, then inspect a warning,
+acknowledge it, verify saved state and prepare a handoff.
+
+## Why does this exist?
+
+ICC exists to demonstrate **PowerShell Universal's MCP feature** with a working
+example you can inspect and try. It shows how a PowerShell workflow can become a
+tool that an external assistant discovers and calls through PSU's MCP endpoint.
+PSU executes the PowerShell and stores the result; the assistant provides the
+conversation.
+
+The **ICC_Demo_Incident** tool exposes three actions: **Inspect**, **Acknowledge**
+and **Handoff**. An assistant can read the current rehearsal, save receipt of its
+warning, verify the stored response and prepare a handoff from those facts. The
+dashboard makes the same saved state visible and lets you compare tool calls
+with direct app actions.
+
+The fictional incident supplies a simple scenario for learning that pattern.
+Its signals are synthetic, while the acknowledgment is real saved state. The
+native app also works independently of an MCP client.
 
 **ICC 0.1.1 targets Windows with PowerShell Universal 2026.3.3 and
 Devolutions.PowerShellUniversal 2026.3.3.** The service signals are synthetic;
@@ -61,7 +79,7 @@ All viewers share the current rehearsal. Coordinate before replacing it.
 Native actions and MCP calls reject stale exercise IDs; refresh the app or Inspect
 the current exercise before continuing.
 
-## Optional MCP
+## Try the MCP demo
 
 Follow [MCP setup and usage](docs/MCP.md). The tool exposes Inspect, Acknowledge
 and Handoff through PSU's MCP endpoint. PSU runs the selected PowerShell and stores
