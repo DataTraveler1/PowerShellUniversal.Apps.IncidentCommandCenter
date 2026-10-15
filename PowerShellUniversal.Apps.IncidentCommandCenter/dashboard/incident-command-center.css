@@ -49,9 +49,9 @@ body { background:#f2f5f8; color:#172536; }
 .icc-action-copy strong { font-size:13px; } .icc-action-copy span { font-size:11px; color:#718190; }
 .icc-actions { display:flex; flex-wrap:wrap; gap:10px; }
 .icc-actions button { font-family:inherit; text-transform:none; font-size:12px; font-weight:600; border-radius:8px; padding:9px 16px; letter-spacing:0; box-shadow:none; }
-#icc-acknowledge { background:#123e4c; color:#fff; }
-#icc-acknowledge:hover { background:#185567; }
-#icc-verify, #icc-handoff { border-color:#c9d6e0; color:#294b5b; }
+.icc-acknowledge { background:#123e4c; color:#fff; }
+.icc-acknowledge:hover { background:#185567; }
+.icc-verify, .icc-handoff { border-color:#c9d6e0; color:#294b5b; }
 #icc-new { color:#718393; margin-left:auto; }
 .icc-bottom { display:grid; grid-template-columns:1fr 1.1fr; gap:20px; }
 .icc-panel { background:#fff; border:1px solid #dce4eb; border-radius:16px; padding:24px 26px; }

@@ -3,7 +3,10 @@
 Use this procedure to update an existing ICC installation or recover resources
 after an interrupted installation. The Windows server must already run PSU and
 Devolutions.PowerShellUniversal 2026.3.3. This updates ICC code, not PSU itself.
-Version 0.1.2 is a community preview with offline validation of its corrections.
+Version 0.1.3 has native/MCP runtime and
+packaged clean-install validation.
+The unchanged packaged app and MCP installers passed on refreshed PSU 2026.3.3
+with empty ICC resource/code/data paths after residual folders were preserved.
 It keeps the existing exercise-data format; no data migration or reset is required.
 
 The fresh installers deliberately stop at occupied app names, routes, scripts,
@@ -30,7 +33,7 @@ Verify the intended release ZIP against its matching distribution checksums.
 Copy its complete module folder to:
 
 ```text
-%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.2\PowerShellUniversal.Apps.IncidentCommandCenter
+%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.3\PowerShellUniversal.Apps.IncidentCommandCenter
 ```
 
 If that folder already exists, preserve its complete before-copy and compare it
@@ -41,7 +44,7 @@ CommonApplicationData root if your machine differs from standard ProgramData.
 Edit the existing app to use this content:
 
 ```powershell
-$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.2/PowerShellUniversal.Apps.IncidentCommandCenter/PowerShellUniversal.Apps.IncidentCommandCenter.psd1'
+$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) 'PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.3/PowerShellUniversal.Apps.IncidentCommandCenter/PowerShellUniversal.Apps.IncidentCommandCenter.psd1'
 Import-Module $manifest -Force
 New-UDIncidentCommandCenterApp
 ```

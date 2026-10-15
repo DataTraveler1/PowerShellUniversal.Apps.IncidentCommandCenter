@@ -1,8 +1,8 @@
 # Architecture
 
 ICC is a shared incident-response rehearsal on one Windows PSU 2026.3.3 server.
-This document describes the 0.1.2 community preview; current
-validation is offline. The live app/client baseline remains the dated 0.1.1 result.
+This document describes ICC 0.1.3. Isolated native/MCP runtime qualification and actual packaged app/tool
+installation on refreshed PSU 2026.3.3 passed.
 Native buttons run module functions in the app process. The optional MCP tool
 calls the same module from PSU automation jobs. An external client supplies the
 model conversation; the dashboard contains no embedded model client.
@@ -36,7 +36,10 @@ inferred from the timeline. Loss of both the acknowledgment and every reference
 to it cannot be distinguished from an untouched exercise by this check; it is
 not a replacement for complete backups. See [recovery](UPGRADE.md#missing-acknowledgment-data).
 
-Native Acknowledge, Verify and Handoff hold the current-pointer lock while checking
+Each native Acknowledge, Verify and Handoff endpoint captures its rendered
+exercise ID in its argument list; controls have exercise-specific IDs. A newer
+view cannot retarget an older button by replacing Session data. These actions
+hold the current-pointer lock while checking
 the displayed exercise and operating. MCP follows the same current-only policy.
 Direct backend calls without `-RequireCurrent` can access a specified non-current
 exercise. Creating a native handoff marks step 3 complete only in that browser
@@ -50,7 +53,7 @@ access. `ICC_DEMO_DATA_ROOT` selects another root, as the offline tests do.
 Store getters can create the initial exercise; Inspect records a Read event.
 
 Code is installed separately under
-`%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.2`.
+`%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.3`.
 Updating code does not reset exercise data.
 
 ## MCP
@@ -68,7 +71,7 @@ arbitrary commands, repair services, send messages or start another rehearsal.
 - Acknowledgment records receipt without attributing it to a particular person.
 - Up to 500 explicit actions per exercise; the app shows the latest eight plus creation.
 - No automatic retention scheduler or deletion.
-- The dated 0.1.1 live baseline used Windows PSU/management-module 2026.3.3 and Codex CLI; 0.1.2 has offline validation only.
+- The 0.1.3 runtime qualification used Windows Server 2019, PSU/module 2026.3.3, PowerShell 7.6.6 and Codex CLI 0.162.0-alpha.17.2. Actual packaged installation also passed on refreshed PSU 2026.3.3.
 
 The app includes no external fonts, telemetry calls, JavaScript packages or
 monitoring APIs.

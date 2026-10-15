@@ -30,12 +30,12 @@ if ($managementModule.Name -cne 'Devolutions.PowerShellUniversal' -or $managemen
     throw 'This installer requires Devolutions.PowerShellUniversal 2026.3.3. The loaded module does not match.'
 }
 $moduleName = 'PowerShellUniversal.Apps.IncidentCommandCenter'
-$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) ('PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.2/' + $moduleName + '/' + $moduleName + '.psd1')
+$manifest = Join-Path ([Environment]::GetFolderPath('CommonApplicationData')) ('PowerShellUniversal/Showcases/IncidentCommandCenter/0.1.3/' + $moduleName + '/' + $moduleName + '.psd1')
 if (-not (Test-Path -LiteralPath $manifest)) { throw 'Install the ICC app from this package first.' }
 $installedManifest = Import-PowerShellDataFile -LiteralPath $manifest
-if ([version]$installedManifest.ModuleVersion -ne [version]'0.1.2') { throw 'The installed ICC manifest must be version 0.1.2 before registering this tool.' }
+if ([version]$installedManifest.ModuleVersion -ne [version]'0.1.3') { throw 'The installed ICC manifest must be version 0.1.3 before registering this tool.' }
 $installedModule = Import-Module $manifest -Force -PassThru
-if ($installedModule.Name -cne $moduleName -or $installedModule.Version -ne [version]'0.1.2') { throw 'The loaded ICC module must be version 0.1.2 before registering this tool.' }
+if ($installedModule.Name -cne $moduleName -or $installedModule.Version -ne [version]'0.1.3') { throw 'The loaded ICC module must be version 0.1.3 before registering this tool.' }
 if (-not (Get-Command Invoke-IccDemoToolOperation -ErrorAction SilentlyContinue)) { throw 'The installed app module predates the chat bridge. Update that module before registering this tool.' }
 $source = Get-Content -LiteralPath (Join-Path $PSScriptRoot 'mcp/Invoke-IccDemoTool.ps1') -Raw
 $origin = $ServerUrl.AbsoluteUri.TrimEnd('/')

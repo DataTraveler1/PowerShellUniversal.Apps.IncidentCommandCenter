@@ -1,5 +1,36 @@
 # Incident Command Center release notes
 
+## 0.1.3 — Windows / PSU 2026.3.3, October 15, 2026
+
+- Bind native Acknowledge, Verify and Handoff requests to the rehearsal shown
+  with the button. Give these controls exercise-specific identities.
+- Keep the server current-ID guard so a superseded tab is rejected before it
+  can acknowledge, verify or prepare a handoff for another rehearsal.
+- Add regression coverage that renders a new view, changes Session data and
+  invokes the older view's three actual callbacks.
+- Align code paths, installers and module metadata to ICC 0.1.3.
+
+Qualification on October 15, 2026 UTC (October 14 local): 338 offline checks
+passed, plus 47 recovery/concurrency checks on the Windows server. The actual
+native workflow and same-browser stale Acknowledge/Verify/Handoff checks passed;
+both stores retained their bytes and write times after the rejected clicks.
+One signed-in Codex session made six native HTTP MCP calls, with exact returned,
+stored-job and model fact/handoff agreement. Original 0.1.1 resources and retained
+0.1.2 code/data were preserved.
+
+The isolated app/script/tool reused their lab IDs and names with new 0.1.3 code
+and data roots. On October 15, the actual unchanged packaged app and MCP installers passed on
+refreshed PSU 2026.3.3. Its empty ICC names/code/data paths were verified after
+residual folders were preserved in a dated backup. Standard native use and one
+direct MCP Inspect passed, with matching saved state and Completed job output.
+No new model session, identity/main-service change or deletion occurred.
+The 71 simulated installer scenarios supplement that real installation test.
+
+Published as a regular release for the documented single-server learning-example
+scope. Other platforms/clients, custom service identities and multiple nodes remain
+untested. Earlier releases and their frozen assets remain available.
+
+
 ## 0.1.2 — Community preview, October 14, 2026
 
 Corrections from the independent 0.1.1 adversarial review:

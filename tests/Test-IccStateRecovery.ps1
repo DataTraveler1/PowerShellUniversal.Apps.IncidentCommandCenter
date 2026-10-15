@@ -169,7 +169,9 @@ if ($Kind -eq 'Acknowledge') {
     function New-UDElement { param($Tag,$Attributes,[scriptblock]$Content) $null = & $Content }
     function New-UDDynamic { param($Id,[scriptblock]$Content) $null = & $Content }
     function New-UDHtml { param($Markup) }
-    function New-UDButton { param($Id,$Text,$Variant,$Color,[scriptblock]$OnClick) $global:IccTestButtons[$Id] = $OnClick }
+    function New-UDEndpoint { param($Id,[object[]]$ArgumentList,[scriptblock]$Endpoint) [pscustomobject]@{Body=$Endpoint.ToString();Arguments=@($ArgumentList)} }
+    function New-UDButton { param($Id,$Text,$Variant,$Color,$ClassName,$OnClick) $global:IccTestButtons[$Text] = $OnClick }
+    function Invoke-IccTestCallback($Callback) { $ArgumentList=$Callback.Arguments; & ([scriptblock]::Create($Callback.Body)) }
     function Show-UDToast { param($Message,$Duration) $global:IccTestToasts.Add([string]$Message) }
     function Sync-UDElement { param($Id) }
     $null = New-PSDrive -Name Cache -PSProvider Variable -Root ''
@@ -182,11 +184,11 @@ if ($Kind -eq 'Acknowledge') {
         $global:IccTestToasts = [Collections.Generic.List[string]]::new()
         Set-Variable -Name IccExerciseId -Scope Global -Value $first.ExerciseId
         & (Join-Path (Split-Path -Parent $ModulePath) 'dashboard/IncidentCommandCenter.ps1')
-        & ($global:IccTestButtons['icc-verify'])
+        Invoke-IccTestCallback $global:IccTestButtons['Verify saved state']
         Confirm-IccState ($global:IccTestToasts[-1] -like 'No acknowledgment*') 'Verify before acknowledgment must say that no acknowledgment exists.'
         Confirm-IccState (-not [IO.File]::Exists((Join-Path $env:ICC_DEMO_DATA_ROOT ($first.ExerciseId+'/state/DEMO-INC-001.json')))) 'An Open verification must not manufacture an acknowledgment file.'
         $null = Invoke-IccDemoAction -Action Acknowledge -ExerciseId $first.ExerciseId
-        & ($global:IccTestButtons['icc-verify'])
+        Invoke-IccTestCallback $global:IccTestButtons['Verify saved state']
         Confirm-IccState ($global:IccTestToasts[-1] -like '*loaded the saved acknowledgment from disk*') 'Verify after acknowledgment must describe the actual disk read.'
     }
     Test-IccStateCase 'Open read timeline copy does not claim a nonexistent state file' {

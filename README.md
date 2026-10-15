@@ -1,10 +1,11 @@
 # Incident Command Center
 
-**ICC 0.1.2 community preview.** The [0.1.2 release](https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/releases/tag/v0.1.2)
-contains three corrections from the independent 0.1.1 review. Validation of these
-corrections is offline only; no new live PSU, MCP-client or visual acceptance is
-claimed. The retained live baseline and screenshot are from 0.1.1. See
-[release notes and change history](RELEASE-NOTES.md).
+**ICC 0.1.3 — Windows / PSU 2026.3.3.** This regular release is a single-server
+learning example. Native workflows, superseded-tab refusal and one signed-in
+Codex MCP conversation passed on the documented scope. The packaged app and MCP
+installers also passed on a refreshed PSU 2026.3.3 instance with empty ICC paths.
+See [the release](https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/releases/tag/v0.1.3)
+and [release notes and change history](RELEASE-NOTES.md).
 
 A working demonstration of PowerShell Universal's **Model Context Protocol (MCP)**
 feature, built around an incident-response rehearsal at fictional **Acme Inc.**
@@ -29,9 +30,9 @@ the same saved state visible.
 
 On a compatible Windows PSU server:
 
-1. Download `IncidentCommandCenter-0.1.2.zip` from the
-   [0.1.2 preview release](https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/releases/tag/v0.1.2)
-   and extract it. The release also supplies a source manifest and SHA-256 checksums.
+1. Download **IncidentCommandCenter-0.1.3.zip** from
+   [the release](https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/releases/tag/v0.1.3)
+   and verify its matching manifest and SHA-256 checksums.
 2. Follow [Install](#install) below, then open `/incident-command-center`
    on your PSU server and sign in as an Administrator.
 3. Follow [MCP setup and usage](docs/MCP.md) to register **ICC_Demo_Incident**
@@ -85,11 +86,12 @@ service repair.
 
 ### Is this ready for production or tested on other platforms? 🚧
 
-This is a **single-server community preview**. The recorded
-live baseline is ICC 0.1.1 on Windows with the PSU/module **2026.3.3** pair,
-PowerShell **7.6.6** and Codex CLI; 0.1.2 has offline validation only. Linux, other PSU
+This is a **single-server learning example**. Release 0.1.3 passed
+isolated native and MCP runtime checks on Windows Server 2019 with the PSU/module
+**2026.3.3** pair, PowerShell **7.6.6** and Codex CLI **0.162.0-alpha.17.2**.
+Actual clean app/tool installation passed on a refreshed PSU 2026.3.3 instance. Linux, other PSU
 releases or clients, custom service identities and multiple nodes remain untested.
-Use it as a learning example; assess and test any adaptation for your environment.
+Assess and test any adaptation for your environment.
 
 <a name="what-if-setup-stops-or-i-want-to-start-another-rehearsal"></a>
 
@@ -101,16 +103,16 @@ For another exercise, choose **New rehearsal** in the app. All viewers share
 the active rehearsal, so coordinate first. Earlier exercise data is retained;
 there is no automatic cleanup.
 
-**ICC 0.1.2 targets Windows with PowerShell Universal 2026.3.3 and
+**ICC 0.1.3 targets Windows with PowerShell Universal 2026.3.3 and
 Devolutions.PowerShellUniversal 2026.3.3.** The service signals are synthetic;
-acknowledgment is stored on disk. This community preview uses one shared active
+acknowledgment is stored on disk. This learning example uses one shared active
 rehearsal on one PSU server.
 
 ![Saved-state counters, native controls and the completed runbook](docs/workflow.jpg)
 
-Recorded ICC 0.1.1 native workflow after **Create handoff**: one saved-state
+Recorded ICC 0.1.3 clean-install native workflow after **Create handoff**: one saved-state
 transition, one safe repeat and three completed runbook steps. Handoff completion
-is specific to the browser session. This retained image is not new 0.1.2 visual evidence.
+is specific to the browser session. Captured October 15, 2026 UTC.
 
 ## Install
 
@@ -118,7 +120,8 @@ Run on the Windows server hosting PSU using **PowerShell 7.5.4 or later**.
 You need the exact PSU/management-module 2026.3.3 pair, an app-capable PSU license,
 an enabled **PowerShell 7** environment and an existing Administrator app token.
 
-Extract the matching 0.1.2 release ZIP, or use the source at tag `v0.1.2`.
+Extract **IncidentCommandCenter-0.1.3.zip** from
+[the release](https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/releases/tag/v0.1.3).
 Open an elevated PowerShell 7
 session in the package directory and keep the module folder beside the installer.
 For the standard PSU Windows installation:
@@ -159,7 +162,8 @@ acknowledgment whose file is missing, ICC stops and requests complete-backup
 recovery rather than silently reopening the incident. See [recovery](docs/UPGRADE.md#missing-acknowledgment-data).
 **New rehearsal** creates a separate exercise and retains previous exercise data.
 All viewers share the current rehearsal. Coordinate before replacing it.
-Native actions and MCP calls reject stale exercise IDs; refresh the app or Inspect
+Each native button carries the rehearsal ID shown when it rendered. Native
+actions and MCP calls reject superseded exercise IDs; refresh the app or Inspect
 the current exercise before continuing.
 
 ## Try the MCP demo
@@ -175,9 +179,20 @@ Never commit tokens or client credentials.
 
 ## Tests and scope
 
-The following live versions describe the retained **ICC 0.1.1** baseline.
-ICC 0.1.2 has been checked offline with PowerShell 7.6.6 on Windows;
-its native PSU app and MCP/model workflow have not been rerun.
+ICC 0.1.3 runtime qualification on October 15, 2026 UTC (October 14 local):
+338 offline checks passed, plus 47 recovery/concurrency checks in fresh scratch
+stores on the Windows server. The actual native workflow and all three stale-tab
+actions passed. One signed-in Codex session made six native HTTP MCP calls;
+its facts and complete handoff matched six Completed PSU jobs and saved state.
+
+The earlier runtime check used a separate app, data root and stable qualification
+tool alias. On October 15, the actual unchanged packaged app and MCP installers
+passed on refreshed PSU 2026.3.3 after residual folders were preserved outside
+the active paths. The standard app and tool share the default data root; native
+use and one direct MCP Inspect passed, matched to its Completed PSU job.
+The 71 installer scenarios remain simulated supplemental coverage.
+Release 0.1.3 is published as a regular release for this measured scope; this does
+not establish production readiness or compatibility with untested environments.
 
 | Tested component | Version |
 | --- | --- |
@@ -194,9 +209,10 @@ pwsh -NoProfile -File .\tests\Test-IccMcp.ps1
 pwsh -NoProfile -File .\tests\Test-IccInstallers.ps1
 pwsh -NoProfile -File .\tests\Test-IccWorkflow.ps1
 pwsh -NoProfile -File .\tests\Test-IccStateRecovery.ps1
+pwsh -NoProfile -File .\tests\Test-IccNativeBinding.ps1
 ```
 
-Outputs go under ignored `output/` storage. The preview has not been tested on
+Outputs go under ignored `output/` storage. The example has not been tested on
 Linux, other PSU releases, other clients, custom service identities or multiple
 nodes. It supplies fixed signals and a demo timeline, with no monitoring connector,
 automatic remediation or human-attributed audit log.
@@ -209,7 +225,7 @@ automatic remediation or human-attributed audit log.
 - `tests/`: offline checks.
 - `docs/`: [MCP](docs/MCP.md), [architecture](docs/ARCHITECTURE.md) and [updating/recovery](docs/UPGRADE.md).
 
-Code installs under `%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.2`.
+Code installs under `%ProgramData%\PowerShellUniversal\Showcases\IncidentCommandCenter\0.1.3`.
 Exercise data lives separately under `%ProgramData%\PowerShellUniversal\IncidentCommandCenter`.
 There is no automatic cleanup. See [architecture and removal](docs/ARCHITECTURE.md)
 for shared-state behavior and deliberate removal.

@@ -1,7 +1,8 @@
 # MCP setup and usage
 
-This guide describes the 0.1.2 community preview. It retains the
-0.1.1 tool contract and shared data format; its current validation is offline.
+This guide describes ICC 0.1.3. It retains the 0.1.1 tool
+contract and shared data format. Isolated native HTTP MCP qualification passed;
+the actual packaged app and MCP installers also passed on refreshed PSU 2026.3.3.
 
 Put an external MCP-capable assistant beside the ICC dashboard. The assistant
 uses **ICC_Demo_Incident** to inspect, acknowledge and hand off the same Acme
@@ -10,7 +11,7 @@ Refresh the dashboard after chat actions. The app also works with its native but
 
 ## Register the tool
 
-Install the ICC 0.1.2 app first. On the same PSU 2026.3.3 Windows server, use
+Install the ICC 0.1.3 app first. On the same PSU 2026.3.3 Windows server, use
 PowerShell 7.5.4 or later and Devolutions.PowerShellUniversal 2026.3.3:
 
 ```powershell
@@ -28,7 +29,7 @@ creation but still reads the server.
 If those resources already exist, follow [Upgrade and recovery](UPGRADE.md).
 Reuse their existing definitions instead of running the fresh installer again.
 
-The wrapper imports the installed 0.1.2 module. App and automation processes
+The wrapper imports the installed 0.1.3 module. App and automation processes
 must use the same shared data root and have access to its files. The default
 ProgramData location supplies that store; different `ICC_DEMO_DATA_ROOT` values
 would select different stores.
@@ -63,11 +64,22 @@ account; the external assistant uses its existing model access.
 
 [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp) and
 [PSU AI Tools](https://docs.devolutions.net/powershell-universal/intelligence/ai-tools)
-describe the connection mechanism. The dated ICC 0.1.1 baseline demonstrated
-Codex CLI native HTTP and one saved project configuration on the Windows/PSU 2026.3.3 pair, using
-Codex CLI **0.162.0-alpha.17.2** and PowerShell **7.6.6**.
-The corrected 0.1.2 release has not been rerun through a live client. Other
-clients have not been tested with this preview.
+describe the connection mechanism. On October 15, 2026 UTC (October 14 local),
+one signed-in Codex CLI **0.162.0-alpha.17.2** session used native HTTP against
+Windows Server 2019 / PSU and Devolutions.PowerShellUniversal **2026.3.3** /
+PowerShell **7.6.6**. It discovered the full exercise ID in its first Inspect,
+then acknowledged, inspected, repeated, inspected and prepared a handoff. All
+six returned frames and the exact model handoff matched stored Completed PSU
+job outputs and the saved record.
+
+That run used the unchanged 0.1.3 wrapper behind an isolated adapter and retained
+lab alias **ICC_012_Qualification**, with separate data and session-only client
+settings. That earlier run did not test fresh installer registration or persistent project
+configuration. The October 15 clean-install pass separately ran the unchanged
+packaged installers and discovered/called the standard ICC_Demo_Incident tool.
+Its Inspect matched the native saved response and its Completed PSU job.
+It used no new model session; the earlier model results remain dated evidence. The saved-project configuration result remains the dated 0.1.1
+baseline. Other clients have not been tested.
 
 ## Demonstrate the conversation
 
