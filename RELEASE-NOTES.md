@@ -1,5 +1,22 @@
 # Incident Command Center release notes
 
+## Documentation update after 0.1.3 — October 15, 2026
+
+- Lead with connecting an AI service to PSU through MCP, using ICC as a working
+  example of selected tool calls, server-side execution, saved state and handoff.
+- Explain commercial AI services and organization-provided LLMs through compatible
+  MCP clients and models that can use tools. Link Copilot in VS Code, Codex and
+  Claude Code documentation while retaining Codex as the only ICC-tested client.
+- Use **AI service** terminology in the public introduction and connection guide.
+  Preserve the earlier FAQ link anchor for existing links.
+- Align the repository description and release introduction with that purpose.
+
+This is a main-branch documentation and public-presentation update. Runtime,
+installers, tests, version, the v0.1.3 tag and all release assets are unchanged.
+The tagged source and downloadable ZIP retain the original reviewed documentation;
+use the main-branch README and MCP guide for the newer AI introduction. The dated
+0.1.3 validation scope below has not been extended by these editorial changes.
+
 ## 0.1.3 — Windows / PSU 2026.3.3, October 15, 2026
 
 - Bind native Acknowledge, Verify and Handoff requests to the rehearsal shown

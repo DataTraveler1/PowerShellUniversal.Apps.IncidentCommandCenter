@@ -1,11 +1,18 @@
 # Architecture
 
-ICC is a shared incident-response rehearsal on one Windows PSU 2026.3.3 server.
-This document describes ICC 0.1.3. Isolated native/MCP runtime qualification and actual packaged app/tool
-installation on refreshed PSU 2026.3.3 passed.
+ICC is a learning example of connecting an AI service to PowerShell Universal
+with Model Context Protocol (MCP), using a shared incident-response rehearsal on
+one Windows PSU 2026.3.3 server. This document describes ICC 0.1.3. Isolated
+native/MCP runtime qualification and actual packaged app/tool installation on
+refreshed PSU 2026.3.3 passed.
+
+The AI service supplies the model and conversation through an MCP-capable client.
+PSU authenticates the connection and runs exposed PowerShell tools on the server.
 Native buttons run module functions in the app process. The optional MCP tool
-calls the same module from PSU automation jobs. An external client supplies the
-model conversation; the dashboard contains no embedded model client.
+calls the same module from PSU automation jobs. The dashboard contains no
+embedded model client. Commercial AI services and organization-provided models
+need a compatible application and tool-capable model; only Codex has been tested
+with ICC. See the [connection guide](MCP.md#choose-your-ai-service-and-client).
 
 ## State and locking
 

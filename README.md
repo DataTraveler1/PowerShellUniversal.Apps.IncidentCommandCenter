@@ -1,5 +1,20 @@
 # Incident Command Center
 
+Connect an **AI service** to **PowerShell Universal (PSU)** through
+**Model Context Protocol (MCP)**. Ask questions in plain English and have your
+AI service use the PowerShell tools you choose to expose.
+
+MCP is a standard that lets an AI application connect to external tools and data.
+Your AI service uses an MCP-capable client to discover and request a PSU tool.
+PSU runs the PowerShell on the server and returns the result; the AI service uses
+those returned facts in its reply.
+
+**Incident Command Center (ICC) is a working example of that connection.** It uses
+an incident-response rehearsal at fictional **Acme Inc.** so you can inspect a
+warning, save an acknowledgment, repeat it safely and prepare a handoff. The
+dashboard makes the same saved state visible. Use the pattern as a starting point
+for your own selected PSU data and workflows.
+
 **ICC 0.1.3 — Windows / PSU 2026.3.3.** This regular release is a single-server
 learning example. Native workflows, superseded-tab refusal and one signed-in
 Codex MCP conversation passed on the documented scope. The packaged app and MCP
@@ -7,22 +22,34 @@ installers also passed on a refreshed PSU 2026.3.3 instance with empty ICC paths
 See [the release](https://github.com/DataTraveler1/PowerShellUniversal.Apps.IncidentCommandCenter/releases/tag/v0.1.3)
 and [release notes and change history](RELEASE-NOTES.md).
 
-A working demonstration of PowerShell Universal's **Model Context Protocol (MCP)**
-feature, built around an incident-response rehearsal at fictional **Acme Inc.**
-Connect an external MCP-capable assistant to PSU, then inspect a warning,
-acknowledge it, verify saved state and prepare a handoff.
-
 ## FAQ
 
 <a name="why-does-this-exist"></a>
 
 ### Why does this exist? 💡
 
-ICC demonstrates **PowerShell Universal's MCP feature** with a working example
-you can inspect and try. An external assistant discovers and calls
-**ICC_Demo_Incident**; PSU runs the PowerShell and stores the result. The incident
-rehearsal gives that demonstration a concrete scenario, and the dashboard makes
-the same saved state visible.
+ICC lets you try **AI service → MCP client → PSU tool → saved result** with a
+small example you can inspect. Its tool, **ICC_Demo_Incident**, exposes three
+bounded actions: Inspect, Acknowledge and Handoff. The incident story is a way to
+learn the connection. Adapting it to your own PSU information or tasks requires
+choosing and exposing the appropriate tools.
+
+<a name="which-ai-services-can-i-use"></a>
+
+### Which AI services can I use? 🔌
+
+You need an **AI service with an MCP-capable client** and a model that can use
+tools. That can be a commercial AI service, or an application connected to a
+large language model (LLM) your organization provides. In either case, the client
+must support PSU's remote HTTP MCP endpoint and app-token authentication.
+
+Familiar options with documented MCP support include
+[GitHub Copilot in VS Code](https://code.visualstudio.com/docs/agent-customization/mcp-servers),
+[Codex](https://learn.chatgpt.com/docs/extend/mcp) and
+[Claude Code](https://code.claude.com/docs/en/mcp).
+**Only Codex has been tested with ICC.** Copilot, Claude Code and organization-provided
+model setups need validation in your environment. See [MCP setup](docs/MCP.md)
+for the tested connection example.
 
 <a name="how-do-i-jump-in-and-use-it-now"></a>
 
@@ -36,7 +63,7 @@ On a compatible Windows PSU server:
 2. Follow [Install](#install) below, then open `/incident-command-center`
    on your PSU server and sign in as an Administrator.
 3. Follow [MCP setup and usage](docs/MCP.md) to register **ICC_Demo_Incident**
-   and connect your assistant.
+   and connect your AI service through its MCP client.
 4. Try the prompt below, then refresh the dashboard to see the saved result.
 
 If ICC is already installed, open the existing app and follow
@@ -56,13 +83,17 @@ The [installation section](#install) supplies the command and local module path.
 ### Do I need an AI account or API key? 🤖
 
 The native dashboard works without an AI account or external API. The MCP demo
-uses your assistant's existing model access and a PSU Administrator app token.
+uses the model access supplied by your AI service or organization, plus a PSU
+Administrator app token for the client connection. Your AI service's account,
+API-key or organization sign-in requirements depend on the client you choose.
 In PSU, **Disable AI Features** must be off for the MCP endpoint to be available.
 Keep tokens in the client's supported local secret mechanism.
 
 <a name="what-should-i-ask-the-assistant"></a>
+<a name="what-should-i-ask-the-assistant-"></a>
+<a name="what-should-i-ask-the-ai-service"></a>
 
-### What should I ask the assistant? 💬
+### What should I ask the AI service? 💬
 
 > Use ICC_Demo_Incident. Inspect the active rehearsal first and keep its full
 > exerciseId for later calls. Acknowledge the warning, inspect the saved state,
@@ -168,10 +199,11 @@ the current exercise before continuing.
 
 ## Try the MCP demo
 
-Follow [MCP setup and usage](docs/MCP.md). The tool exposes Inspect, Acknowledge
-and Handoff through PSU's MCP endpoint. PSU runs the selected PowerShell and stores
-the result; the external assistant supplies the conversation. Refresh ICC after
-chat actions. The native dashboard works without an AI account or external API.
+Follow [MCP setup and usage](docs/MCP.md) to connect your AI service's MCP client.
+The tool exposes Inspect, Acknowledge and Handoff through PSU's MCP endpoint.
+PSU runs the selected PowerShell and stores the result; your AI service provides
+the conversation and uses the returned facts. Refresh ICC after chat actions.
+The native dashboard works without an AI account or external API.
 
 PSU AI features must be enabled for MCP: **Disable AI Features** must be off.
 Use an existing Administrator token through the client's local secret mechanism.
@@ -216,6 +248,10 @@ Outputs go under ignored `output/` storage. The example has not been tested on
 Linux, other PSU releases, other clients, custom service identities or multiple
 nodes. It supplies fixed signals and a demo timeline, with no monitoring connector,
 automatic remediation or human-attributed audit log.
+
+The AI introduction in the main-branch documentation was updated on October 15,
+2026 after the release. The **v0.1.3 tag and downloadable package retain their
+original reviewed source and documentation**. See the [dated documentation update](RELEASE-NOTES.md).
 
 ## Code and data
 

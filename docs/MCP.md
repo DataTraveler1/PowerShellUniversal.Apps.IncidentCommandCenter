@@ -1,13 +1,49 @@
-# MCP setup and usage
+<a name="mcp-setup-and-usage"></a>
 
-This guide describes ICC 0.1.3. It retains the 0.1.1 tool
-contract and shared data format. Isolated native HTTP MCP qualification passed;
-the actual packaged app and MCP installers also passed on refreshed PSU 2026.3.3.
+# Connect your AI service to PSU with MCP
 
-Put an external MCP-capable assistant beside the ICC dashboard. The assistant
-uses **ICC_Demo_Incident** to inspect, acknowledge and hand off the same Acme
-rehearsal shown in the app. PSU runs the PowerShell and stores the acknowledgment.
-Refresh the dashboard after chat actions. The app also works with its native buttons.
+ICC is an example of using **Model Context Protocol (MCP)** to connect an AI
+service to selected PowerShell Universal tools. You ask in plain English; the
+service uses its MCP client to discover and request **ICC_Demo_Incident**.
+PSU runs the PowerShell on the server and returns the tool result for the reply.
+
+The tool can inspect, acknowledge and hand off the Acme rehearsal shown in the
+ICC dashboard. Refresh the dashboard after chat actions. Its native buttons
+also work without an AI service.
+
+This guide describes ICC 0.1.3. It retains the 0.1.1 tool contract and shared
+data format. Isolated native HTTP MCP qualification passed; the actual packaged
+app and MCP installers also passed on refreshed PSU 2026.3.3. The AI introduction
+was updated after release; the v0.1.3 tag and downloads remain unchanged.
+
+## Choose your AI service and client
+
+You can use a commercial AI service, or an application connected to a large
+language model (LLM) your organization provides. You need both an **MCP-capable
+client/application** and a **model that can use tools**. The client must support remote HTTP MCP connections
+and PSU app-token authentication. A model endpoint alone does not provide that
+connection.
+
+Documented MCP-capable options include
+[GitHub Copilot in VS Code](https://code.visualstudio.com/docs/agent-customization/mcp-servers),
+[Codex](https://learn.chatgpt.com/docs/extend/mcp) and
+[Claude Code](https://code.claude.com/docs/en/mcp). **Only Codex has been tested
+with ICC**; other clients and organization-provided model setups require your
+own validation. Check your chosen client's documentation for its connection and
+credential settings. The Codex example below reflects the client used for ICC's
+dated qualification.
+
+Your AI service supplies the model and conversation. PSU supplies the MCP
+endpoint, authenticated tool access, server-side PowerShell execution and job
+output. The ICC wrapper limits its operations to this rehearsal; other PSU
+information or actions require separately selected and exposed tools.
+
+## Before you connect
+
+Install the app using the [README prerequisites and installation steps](../README.md#install),
+then register the tool and configure the client below. This example uses existing
+PSU Administrator access. Choose a trusted AI service and review which tools and
+returned data you permit it to use.
 
 ## Register the tool
 
@@ -60,7 +96,7 @@ Replace the example URL with your instance. Make the token environment variable
 available to the client before it starts, using your normal local credential
 handling. Codex loads project configuration only for trusted projects. Approve
 the intended demo actions when the client asks. The app itself needs no model
-account; the external assistant uses its existing model access.
+account; your AI service uses the model access configured in its client.
 
 [Codex MCP configuration](https://learn.chatgpt.com/docs/extend/mcp) and
 [PSU AI Tools](https://docs.devolutions.net/powershell-universal/intelligence/ai-tools)
@@ -85,7 +121,7 @@ baseline. Other clients have not been tested.
 
 Coordinate with other viewers, then choose **New rehearsal** for a fresh take.
 It changes the shared active exercise and preserves previous rehearsals.
-Give the assistant this instruction:
+Give your AI service this instruction:
 
 > Use ICC_Demo_Incident for all incident facts and actions. Inspect first, retain
 > the full exerciseId and send it with later calls. Stop on tool failures. An
